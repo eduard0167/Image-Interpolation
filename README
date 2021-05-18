@@ -1,0 +1,64 @@
+===============================================================================
+Mitroi Eduard Ionut 312CA
+
+                            Tema MN 2021
+                    Interpolare aplicata pe imagini
+
+===============================================================================
+Observatii:
+	-> Pentru resize, pentru a putea implementa corect functiile (folosind
+	coordonatele de la (0,0) la (m-1,n-1)), factorii de scalare pentru a
+	aduce matricea mxn la pxq sunt:
+		- s_x = (q - 1) / (n - 1)
+   		- s_y = (p - 1) / (m - 1)
+   	
+   	-> Pentru rezolvarea sistemelor de ecuatii Ax = b, am folosit functia
+   	linsolve implementata in Octave.
+
+ -> Nearest-neighbours:
+
+	Pentru functia nn_2x2 am folosit functia round asupra indicilor
+	impartiti la dimensiunea noi imagini pentru a gasi cel mai apropiat
+	vecin, fiind vorba de puncte echidistante.
+	In functia de resize, am aplicat transformarea inversa asupra 	
+	indicilor, dupa care i-am rotunjit (dupa ce i-am adus la sistemul de
+	coordonate cu originea in (1,1)), valoarea pixelilor din noua imagine
+	regasindu-se exact in matricea initiala in punctele calculate.
+	
+ -> Bilinear:
+ 	Considerand functia de interpolare de forma:
+ 		f(x,y) = a0 + a1 * x + a2 * y + a3 * x * y , 
+ 	avem nevoie sa calculam coeficientii a0,a1,a2,a3 in functie de punctele
+ 	vecine. Acest lucru se rezuma la rezolvare unui sistem Ax = b. In timp
+ 	ce pentru o matrice 2x2 coeficientii se pot calcula in prealabil 
+ 	(pentru orice punct din matrice, punctele vecine vor fi aceleasi), 
+ 	pentru a face resize pe o imagine mxn, acestia trebui calculati la 
+ 	fiecare pas. Avand coeficientii functiei de interpolare, fiecare pixel 
+ 	din noua imagine se poate calcula ca valoarea functiei in punctul 
+ 	respectiv.
+ 	
+ -> Bicubic: 
+ 	Considerand functia de interpolare de forma:
+ 		f(x,y) = [1 x x^2 x^3] * A * [1 y y^2 y^3]' ,
+ 		unde A reprezinta matricea celor 16 coeficienti necesari.
+ 	Cei 16 coeficienti se obtin prin impunerea conditiei ca atat functia, 
+ 	cat si derivatele partiale sa aiba valori cunoscute.
+ 	Primul pas este aproximarea derivatelor partiale, dupa care se formeaza
+ 	matricea 4x4 cu ajutorul careia calculez coeficientii. Pentru a forma
+ 	matricea 4x4, am creat 4 matrici intermediare 2x2 (1 pentru valorile
+ 	functie, 1 pentru valorile fiecarei derivate partiale), pe care apoi 
+ 	le-am concatenat.
+ 	Calcularea pixelilor din noua imagine este asemantoare cu cea de la 
+ 	bilinear: gasesc punctele din imaginea initiala intre care se afla noul
+ 	pixel, cu ajutorul acestora ajung la coeficientii functiei, dupa care
+ 	doar calculez valoarea functiei de interpolare in punctul respectiv.
+ 	
+===============================================================================
+Feedback: Tema mi s-a parut interesenta, am apreciat toate temele din anul I
+care reprezinta aplicatii reale a materiilor studiate. Totusi, consider ca 
+scheletul a fost extrem de sugestiv, practic explicandu-ne pas cu pas codul,
+ceea ce a usurat foarte de mult tema. MN-ul este o materie destul de grea, 
+dar cred ca ar trebui sa gasiti un echilibru intre dificultatea temei si 
+hint-urile date.
+PS: Foarte bune raspunsurile pe forum, chiar au fost extrem de utile.
+===============================================================================
